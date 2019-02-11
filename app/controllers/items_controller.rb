@@ -6,6 +6,7 @@ class ItemsController < ApplicationController
   end
 
   def show
+    @item = Item.find(params[:id])
   end
 
   def new
@@ -16,11 +17,11 @@ class ItemsController < ApplicationController
   end
 
   def create
-    @item = Item.new(item_params)
+    @item = Item.new(items_params)
 
     respond_to do |format|
       if @item.save
-        format.html { redirect_to Root_path, notice: 'Item was successfully created.'}
+        format.html { redirect_to root_path, notice: 'Item was successfully created.'}
         format.json {render :show, status: :created, location: @item}
       else
         format.html {render :new}
@@ -28,6 +29,18 @@ class ItemsController < ApplicationController
       end
     end
   end
+
+  def update
+      respond_to do |format|
+        if @item.update(items_params)
+          format.html { redirect_to root_path, notice: 'Item was successfully updated.' }
+          format.json { render :show, status: :ok, location: @item }
+        else
+          format.html { render :edit }
+          format.json { render json: @item.errors, status: :unprocessable_entity }
+        end
+      end
+    end
 
   def destroy
     @item.destroy
@@ -43,6 +56,6 @@ class ItemsController < ApplicationController
   end
 
   def items_params
-    params.require(:item).permit(:tem)
+    params.require(:item).permit(:item)
   end
 end
